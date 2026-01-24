@@ -1,0 +1,14 @@
+../Core/Src/position_control.c:37:5:PositionControl_Init	1
+../Core/Src/position_control.c:51:14:PID_Calculate	5
+../Core/Src/position_control.c:87:6:PositionControl_Update	5
+../Core/Src/position_control.c:129:5:PositionControl_SetTarget	3
+../Core/Src/position_control.c:145:25:PositionControl_GetState	1
+../Core/Src/position_control.c:149:7:PositionControl_GetCurrentAngle	1
+../Core/Src/position_control.c:153:6:PositionControl_IsStable	1
+../Core/Src/position_control.c:158:6:PositionControl_SetPID	1
+../Core/Src/position_control.c:171:5:PositionControl_Enable	1
+../Core/Src/position_control.c:178:6:PositionControl_Disable	1
+../Core/Src/position_control.c:184:6:PositionControl_Reset	1
+../Core/Src/position_control.c:192:6:PositionControl_CheckSafety	4
+../Core/Src/position_control.c:211:6:PositionControl_EmergencyStop	1
+../Core/Src/position_control.c:219:6:PositionControl_PrintStatus	2

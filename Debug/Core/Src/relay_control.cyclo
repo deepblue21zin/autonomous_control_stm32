@@ -1,0 +1,5 @@
+../Core/Src/relay_control.c:16:6:Relay_Init	1
+../Core/Src/relay_control.c:26:6:Relay_ServoOn	1
+../Core/Src/relay_control.c:34:6:Relay_ServoOff	1
+../Core/Src/relay_control.c:42:6:Relay_Emergency	1
+../Core/Src/relay_control.c:50:6:Relay_EmergencyRelease	1

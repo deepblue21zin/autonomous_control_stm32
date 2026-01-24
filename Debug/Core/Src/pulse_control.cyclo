@@ -1,0 +1,8 @@
+../Core/Src/pulse_control.c:30:6:PulseControl_Init	1
+../Core/Src/pulse_control.c:41:6:pulse_forward	1
+../Core/Src/pulse_control.c:50:6:pulse_reverse	1
+../Core/Src/pulse_control.c:57:6:PulseControl_SetFrequency	3
+../Core/Src/pulse_control.c:77:6:PulseControl_SendSteps	4
+../Core/Src/pulse_control.c:101:6:HAL_TIM_PWM_PulseFinishedCallback	4
+../Core/Src/pulse_control.c:119:6:PulseControl_Stop	1
+../Core/Src/pulse_control.c:128:9:PulseControl_IsBusy	1

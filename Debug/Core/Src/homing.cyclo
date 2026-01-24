@@ -1,0 +1,6 @@
+../Core/Src/homing.c:21:5:Homing_Init	1
+../Core/Src/homing.c:31:5:Homing_FindZero	1
+../Core/Src/homing.c:56:9:Homing_IsComplete	1
+../Core/Src/homing.c:64:16:Homing_GetStatus	1
+../Core/Src/homing.c:72:13:Homing_GetStatusString	5
+../Core/Src/homing.c:91:6:Homing_Reset	1

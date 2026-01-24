@@ -1,0 +1,6 @@
+../Core/Src/encoder_reader.c:20:5:EncoderReader_Init	1
+../Core/Src/encoder_reader.c:28:7:EncoderReader_GetAngleDeg	1
+../Core/Src/encoder_reader.c:35:9:EncoderReader_GetCount	1
+../Core/Src/encoder_reader.c:41:6:EncoderReader_Reset	1
+../Core/Src/encoder_reader.c:48:6:EncoderReader_SetOffset	1
+../Core/Src/encoder_reader.c:53:9:EncoderReader_IsInitialized	1

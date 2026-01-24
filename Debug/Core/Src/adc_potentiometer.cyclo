@@ -1,0 +1,5 @@
+../Core/Src/adc_potentiometer.c:31:5:ADC_Pot_Init	4
+../Core/Src/adc_potentiometer.c:53:10:ADC_Pot_GetRaw	2
+../Core/Src/adc_potentiometer.c:69:7:ADC_Pot_GetVoltage	1
+../Core/Src/adc_potentiometer.c:82:7:ADC_Pot_GetAngle	1
+../Core/Src/adc_potentiometer.c:98:6:ADC_Pot_Calibrate	1
