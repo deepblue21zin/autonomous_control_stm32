@@ -12,8 +12,8 @@
 | BUG-001 | PulseControl_SetFrequency() 방향 핀 미설정 | pulse_control.c | **Critical** | **해결 (2026-01-31)** |
 | BUG-002 | PositionControl_Update() 주기적 호출 부재 | main.c / stm32f4xx_it.c | **Critical** | **해결 (2026-01-31)** |
 | BUG-003 | PulseControl_SetFrequency() PWM 시작 누락 | pulse_control.c | **Critical** | **해결 (2026-01-31)** |
-| BUG-004 | position_control.h 선언 vs .c 구현 불일치 (13개 함수 미구현) | position_control.c/h | **Major** | 미해결 |
-| BUG-005 | PID 파라미터 헤더/소스 불일치 | position_control.c/h | **Minor** | 미해결 |
+| BUG-004 | position_control.h 선언 vs .c 구현 불일치 (13개 함수 미구현) | position_control.c/h | **Major** | **해결 (2026-02-01)** |
+| BUG-005 | PID 파라미터 헤더/소스 불일치 | position_control.c/h | **Minor** | **해결 (2026-02-01)** |
 | BUG-006 | 안정화 판단 시간 측정 부정확 | position_control.c | **Minor** | 미해결 |
 
 ---
@@ -21,7 +21,7 @@
 ## BUG-001: PulseControl_SetFrequency() 방향 핀 미설정
 
 **심각도:** Critical
-**상태:** 미해결
+**상태:** **해결 완료 (2026-01-31)**
 **발견일:** 2026-01-31
 **파일:** `Core/Src/pulse_control.c` (57~72행)
 
@@ -110,7 +110,7 @@ void PulseControl_SetFrequency(int32_t freq_hz) {
 ## BUG-002: PositionControl_Update() 주기적 호출 부재
 
 **심각도:** Critical
-**상태:** 미해결
+**상태:** **해결 완료 (2026-01-31 PID 호출 추가, 2026-02-01 데모 코드 제거)**
 **발견일:** 2026-01-31
 **파일:** `Core/Src/main.c` (120~144행), `Core/Src/stm32f4xx_it.c` (183~192행)
 
@@ -205,14 +205,20 @@ while (1) {
 
 **핵심:** `volatile` 키워드가 필수 — 인터럽트에서 변경된 값을 main loop에서 올바르게 읽기 위함
 
-**남은 작업:** main_edit.c의 기존 데모 코드(pulse_forward/reverse, HAL_Delay) 제거 필요 (별도 작업)
+~~**남은 작업:** main_edit.c의 기존 데모 코드(pulse_forward/reverse, HAL_Delay) 제거 필요 (별도 작업)~~
+
+**후속 해결 (2026-02-01):**
+- 데모 코드 전부 삭제 (pulse_forward, pulse_reverse, HAL_Delay, Relay_ServoOff)
+- while 전에 시스템 시동 시퀀스 추가: `Relay_ServoOn()` → `HAL_Delay(1000)` → `SetTarget(20.0f)` → `Enable()`
+- while 안에는 flag 체크 + `PositionControl_Update()`만 남김
+- 상세 변경 내용: [change_code.md 변경 #4](change_code.md) 참조
 
 ---
 
 ## BUG-003: PulseControl_SetFrequency() PWM 시작 누락
 
 **심각도:** Critical
-**상태:** 미해결
+**상태:** **해결 완료 (2026-01-31)**
 **발견일:** 2026-01-31
 **파일:** `Core/Src/pulse_control.c` (57~72행)
 
@@ -281,7 +287,7 @@ void PulseControl_SetFrequency(int32_t freq_hz) {
 ## BUG-004: position_control.h 선언 vs .c 구현 불일치
 
 **심각도:** Major
-**상태:** 미해결
+**상태:** **해결 완료 (13/13, 2026-02-01)**
 **발견일:** 2026-01-31
 **파일:** `Core/Inc/position_control.h`, `Core/Src/position_control.c`
 
@@ -294,19 +300,19 @@ position_control.h에 선언된 함수 중 13개가 position_control.c에 구현
 ```
 // 헤더에 선언만 있고, 소스에 구현이 없는 함수들
 
-PositionControl_GetTarget()              // 목표 각도 반환
-PositionControl_GetError()               // 현재 오차 반환
-PositionControl_GetPID()                 // PID 파라미터 읽기
-PositionControl_SetMode()                // 제어 모드 변경
-PositionControl_GetMode()                // 현재 모드 조회
-PositionControl_SetSafetyLimits()        // 안전 한계값 설정
-PositionControl_IsSafe()                 // 안전 상태 확인
-PositionControl_GetStats()               // 성능 통계 조회
-PositionControl_ResetStats()             // 통계 리셋
-PositionControl_RegisterErrorCallback()  // 에러 콜백 등록
-PositionControl_RegisterStableCallback() // 안정화 콜백 등록
-PositionControl_SetDebugLevel()          // 디버그 레벨 설정
-PositionControl_GetErrorString()         // 에러코드 → 문자열
+✅ PositionControl_GetTarget()              // 목표 각도 반환         → Group 1 (2026-02-01 해결)
+✅ PositionControl_GetError()               // 현재 오차 반환         → Group 1 (2026-02-01 해결)
+✅ PositionControl_GetPID()                 // PID 파라미터 읽기      → Group 1 (2026-02-01 해결)
+✅ PositionControl_SetMode()                // 제어 모드 변경         → Group 2 (2026-02-01 해결)
+✅ PositionControl_GetMode()                // 현재 모드 조회         → Group 2 (2026-02-01 해결)
+✅ PositionControl_SetSafetyLimits()        // 안전 한계값 설정       → Group 3 (2026-02-01 해결)
+✅ PositionControl_IsSafe()                 // 안전 상태 확인         → Group 3 (2026-02-01 해결)
+✅ PositionControl_GetStats()               // 성능 통계 조회         → Group 3 (2026-02-01 해결)
+✅ PositionControl_ResetStats()             // 통계 리셋             → Group 3 (2026-02-01 해결)
+✅ PositionControl_RegisterErrorCallback()  // 에러 콜백 등록         → Group 4 (2026-02-01 해결)
+✅ PositionControl_RegisterStableCallback() // 안정화 콜백 등록       → Group 4 (2026-02-01 해결)
+✅ PositionControl_SetDebugLevel()          // 디버그 레벨 설정       → Group 4 (2026-02-01 해결)
+✅ PositionControl_GetErrorString()         // 에러코드 → 문자열      → Group 4 (2026-02-01 해결)
 ```
 
 ### 원인 분석
@@ -327,9 +333,23 @@ PositionControl_GetErrorString()         // 에러코드 → 문자열
 **방법 B — 전체 구현:** 13개 함수 모두 구현 (시간 소요)
 **방법 C — 단계적 구현:** 우선순위별로 나눠서 필요할 때마다 추가
 
-### 해결 결과
+### 해결 결과 — Group 1: 상태 읽기 Getter (2026-02-01)
 
-> (해결 후 작성 예정)
+**해결자:** position_control 담당
+
+**구현 내용:** 3개 함수 구현 (GetTarget, GetError, GetPID)
+
+| 함수 | 구현 코드 | 비고 |
+|------|-----------|------|
+| `GetTarget()` | `return state.target_angle;` | 단순 값 반환 |
+| `GetError()` | `return state.error;` | 단순 값 반환 |
+| `GetPID()` | `*params = pid_params;` | 포인터를 통한 구조체 복사 + NULL 방어 |
+
+**핵심:** `GetPID()`는 호출자가 NULL 포인터를 전달했을 때의 크래시를 방지하기 위해 `if (params != NULL)` 체크를 추가함
+
+**상세 변경 내용:** [change_code.md 변경 #5](change_code.md) 참조
+
+**남은 작업:** Groups 2~4 (10개 함수) 순차 구현 예정
 
 ---
 
@@ -448,4 +468,4 @@ if (fabsf(state.error) < POSITION_TOLERANCE) {
 
 ---
 
-*마지막 업데이트: 2026-01-31*
+*마지막 업데이트: 2026-02-01*

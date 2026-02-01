@@ -51,6 +51,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+extern volatile uint8_t interrupt_flag;
 
 /* USER CODE END PV */
 
@@ -112,7 +113,10 @@ int main(void)
   char msg[] = "Servo Start!\r\n";
   HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), 100);
 
-
+  Relay_ServoOn();
+  HAL_Delay(1000);
+  PositionControl_SetTarget(20.0f);
+  PositionControl_Enable();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -120,28 +124,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+    if(interrupt_flag == 1) {
+    	interrupt_flag = 0;
+    	PositionControl_Update();
+    }
+    //flage 체크 + PositionControl_Update() 호출
 
     /* USER CODE BEGIN 3 */
-	  uint32_t count = __HAL_TIM_GET_COUNTER(&htim2);
 
-	  // SVON ON
-	  Relay_ServoOn();
-	  HAL_Delay(500);
-
-	  // Forward
-	  pulse_forward(5000);
-	  HAL_UART_Transmit(&huart3, (uint8_t*)"Forward\r\n", 9, 100);
-	  HAL_Delay(1000);
-
-	  // Reverse
-	  pulse_reverse(5000);
-	  HAL_UART_Transmit(&huart3, (uint8_t*)"Reverse\r\n", 9, 100);
-	  HAL_Delay(1000);
-
-	  // SVON OFF
-	  Relay_ServoOff();
-	  HAL_Delay(2000);
+	  
   }
+  //HAL_Delat()의 치명적 문제 : 1ms마다 inerrupt_flag가 올라와도, CPU가 HAL_Delay()안에서 블로킹 되어 있으니 PositionControl_Update()가 호출되지 않음
+  //PID 제어에서 주기가 깨지면 제어 성능이 망가진다.
   /* USER CODE END 3 */
 }
 
@@ -170,6 +164,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
+  
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
